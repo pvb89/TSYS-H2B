@@ -1,0 +1,40 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env", {
+        "targets": {
+          "browsers": [">1%", "not op_mini all"],
+          "node": "current"
+        },
+        "useBuiltIns": "usage",
+        "corejs": {
+          "version": "3.1",
+          "proposals": true
+        },
+        "modules": "auto",
+        "debug": false
+      }
+    ],
+    "@babel/preset-react"
+  ],
+  "plugins": [
+    "@babel/plugin-transform-regenerator",
+    ["@babel/plugin-transform-arrow-functions", {
+      "spec": false
+    }],
+    ["@babel/plugin-proposal-decorators", {
+      "legacy": true
+    }],
+    ["module-resolver", {
+      "root": ["./src"]
+    }],
+    "lodash",
+    "@babel/plugin-transform-runtime",
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-syntax-dynamic-import",
+    ["react-intl", {
+      "messagesDir": "./.messages",
+      "extractSourceLocation": false
+    }]
+  ]
+}

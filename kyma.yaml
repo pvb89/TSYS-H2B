@@ -1,0 +1,170 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: h2b-mw-service
+  labels:
+    app: h2b-mw-service
+spec:
+  ports:
+    - port: 3000
+      targetPort: 3000
+  selector:
+    app: h2b-mw
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: h2b-mw
+spec:
+  selector:
+    matchLabels:
+      app: h2b-mw
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: h2b-mw
+    spec: 
+      containers:
+        - image: pvb1/tsys-h2b-mw:latest
+          name: h2b-mw
+          ports:
+            - containerPort: 3000
+---
+apiVersion: gateway.kyma-project.io/v1alpha1
+kind: APIRule
+metadata:
+  name: h2b-mw-api
+spec:
+  gateway: kyma-gateway.kyma-system.svc.cluster.local
+  rules:
+    - accessStrategies:
+        - config: {}
+          handler: allow
+      methods:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        - HEAD
+      path: /.*
+  service:
+    host: h2b-mw.c-2fed325.kyma.shoot.live.k8s-hana.ondemand.com
+    name: h2b-mw-service
+    port: 3000
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: h2b-fe-service
+  labels:
+    app: h2b-fe-service
+spec:
+  ports:
+    - port: 82
+      targetPort: 82
+  selector:
+    app: h2b-fe
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: h2b-fe
+spec:
+  selector:
+    matchLabels:
+      app: h2b-fe
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: h2b-fe
+    spec: 
+      containers:
+        - image: pvb1/tsys-h2b-fe:latest
+          name: h2b-fe
+          ports:
+            - containerPort: 82
+---
+apiVersion: gateway.kyma-project.io/v1alpha1
+kind: APIRule
+metadata:
+  name: h2b-fe-api
+spec:
+  gateway: kyma-gateway.kyma-system.svc.cluster.local
+  rules:
+    - accessStrategies:
+        - config: {}
+          handler: allow
+      methods:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        - HEAD
+      path: /.*
+  service:
+    host: h2b-fe1.c-2fed325.kyma.shoot.live.k8s-hana.ondemand.com
+    name: h2b-fe-service
+    port: 82
+status: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: h2b-wc-service
+  labels:
+    app: h2b-wc-service
+spec:
+  ports:
+    - port: 81
+      targetPort: 81
+  selector:
+    app: h2b-wc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: h2b-wc
+spec:
+  selector:
+    matchLabels:
+      app: h2b-wc
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: h2b-wc
+    spec: 
+      containers:
+        - image: pvb1/tsys-h2b-wc:latest
+          name: h2b-wc
+          ports:
+            - containerPort: 81
+---
+apiVersion: gateway.kyma-project.io/v1alpha1
+kind: APIRule
+metadata:
+  name: h2b-wc-api
+spec:
+  gateway: kyma-gateway.kyma-system.svc.cluster.local
+  rules:
+    - accessStrategies:
+        - config: {}
+          handler: allow
+      methods:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        - HEAD
+      path: /.*
+  service:
+    host: h2b-wc1.c-2fed325.kyma.shoot.live.k8s-hana.ondemand.com
+    name: h2b-wc-service
+    port: 81
+status: {}

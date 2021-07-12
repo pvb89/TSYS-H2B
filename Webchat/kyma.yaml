@@ -1,0 +1,56 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: h2b-wc-service
+  labels:
+    app: h2b-wc-service
+spec:
+  ports:
+    - port: 81
+      targetPort: 81
+  selector:
+    app: h2b-wc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: h2b-wc
+spec:
+  selector:
+    matchLabels:
+      app: h2b-wc
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: h2b-wc
+    spec: 
+      containers:
+        - image: pvb1/tsys-h2b-wc:latest
+          name: h2b-wc
+          ports:
+            - containerPort: 81
+---
+apiVersion: gateway.kyma-project.io/v1alpha1
+kind: APIRule
+metadata:
+  name: h2b-wc-api
+spec:
+  gateway: kyma-gateway.kyma-system.svc.cluster.local
+  rules:
+    - accessStrategies:
+        - config: {}
+          handler: allow
+      methods:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+        - HEAD
+      path: /.*
+  service:
+    host: h2b-wc1.c-2fed325.kyma.shoot.live.k8s-hana.ondemand.com
+    name: h2b-wc-service
+    port: 81
+status: {}

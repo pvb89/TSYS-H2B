@@ -1,0 +1,20 @@
+version: "3"
+services:
+    frontend:
+        container_name: tsys-h2b-fe
+        image: pvb1/tsys-h2b-fe
+        build: ./Frontend
+        ports:
+            - 82:82
+    webchat:
+        container_name: tsys-h2b-wc
+        image: pvb1/tsys-h2b-wc
+        build: ./Webchat
+        ports:
+            - 81:81
+    middleware:
+        container_name: tsys-h2b-mw
+        image: pvb1/tsys-h2b-mw
+        build: ./Middleware
+        ports:
+            - 3000:3000
